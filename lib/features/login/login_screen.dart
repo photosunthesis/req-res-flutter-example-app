@@ -99,6 +99,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             label: _l10n.emailOrMobileLabel,
             hintText: _l10n.emailOrMobileHint,
             controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return _l10n.emailOrMobileError;
@@ -112,6 +114,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             hintText: _l10n.passwordHint,
             isPassword: true,
             controller: _passwordController,
+            keyboardType: TextInputType.visiblePassword,
+            autofillHints: const [AutofillHints.password],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return _l10n.passwordError;

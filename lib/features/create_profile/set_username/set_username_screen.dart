@@ -61,6 +61,8 @@ class _SetUsernameState extends ConsumerState<SetUsernameScreen> {
             return null;
           },
           controller: _usernameController,
+          keyboardType: TextInputType.text,
+          autofillHints: const [AutofillHints.username],
           onChanged: (value) {
             ref.read(createProfileNotifierProvider.notifier).setUsername(value);
           },

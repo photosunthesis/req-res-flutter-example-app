@@ -119,6 +119,8 @@ class _CreatePasswordScreenState extends ConsumerState<CreatePasswordScreen> {
       hintText: _l10n.passwordHint,
       controller: _passwordController,
       isPassword: true,
+      keyboardType: TextInputType.visiblePassword,
+      autofillHints: const [AutofillHints.newPassword],
       onChanged: (value) =>
           ref.read(createPasswordNotifierProvider.notifier).setPassword(value),
     );

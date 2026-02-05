@@ -101,6 +101,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             label: _l10n.emailOrMobileLabel,
             hintText: _l10n.emailOrMobileHint,
             controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 _errorMessage = _l10n.requiredFieldError;

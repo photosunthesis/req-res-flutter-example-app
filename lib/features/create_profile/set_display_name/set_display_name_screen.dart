@@ -72,6 +72,8 @@ class _SetDisplayNameScreenState extends ConsumerState<SetDisplayNameScreen> {
             label: _l10n.firstName,
             hintText: _l10n.enterFirstName,
             controller: _firstNameController,
+            keyboardType: TextInputType.name,
+            autofillHints: const [AutofillHints.givenName],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return _l10n.firstNameRequired;
@@ -85,6 +87,8 @@ class _SetDisplayNameScreenState extends ConsumerState<SetDisplayNameScreen> {
             label: _l10n.lastName,
             hintText: _l10n.enterLastName,
             controller: _lastNameController,
+            keyboardType: TextInputType.name,
+            autofillHints: const [AutofillHints.familyName],
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return _l10n.lastNameRequired;
