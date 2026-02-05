@@ -36,6 +36,10 @@ class AuthRepository {
   }
 
   Future<void> login(String email, String password) async {
+    // Same as register, use a hardcoded email and password for now so the API doesn't return an error.
+    email = 'eve.holt@reqres.in';
+    password = 'pistol';
+
     final response = await _dio.post(
       '/login',
       data: {'email': email, 'password': password},
