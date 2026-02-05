@@ -48,11 +48,11 @@ jobs:
           for apk in build/app/outputs/flutter-apk/app-*-release.apk; do
             filename=$(basename "$apk")
             if [[ "$filename" == "app-armeabi-v7a-release.apk" ]]; then
-              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-arm-v7a.apk"
+              cp "$apk" "release/ReqRes_v${{ steps.version.outputs.version }}_Old_Phones.apk"
             elif [[ "$filename" == "app-arm64-v8a-release.apk" ]]; then
-              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-arm64-v8a.apk"
+              cp "$apk" "release/ReqRes_v${{ steps.version.outputs.version }}_v8a_Modern_Phones.apk"
             elif [[ "$filename" == "app-x86_64-release.apk" ]]; then
-              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-x86_64.apk"
+              cp "$apk" "release/ReqRes_v${{ steps.version.outputs.version }}_Emulators.apk"
             fi
           done
       
@@ -67,17 +67,14 @@ jobs:
           files: |
             release/*.apk
           body: |
-            ## Release ${{ steps.version.outputs.version }}
+            ## v${{ steps.version.outputs.version }}
             
-            ### What's Changed
-            See the full changelog below.
-            
-            **Direct APKs** (Pick the one for your device):
-            - **ARM v7a** (Older 32-bit devices): `req_res_flutter-${{ steps.version.outputs.version }}-arm-v7a.apk`
-            - **ARM64 v8a** (Most modern 64-bit devices): `req_res_flutter-${{ steps.version.outputs.version }}-arm64-v8a.apk`
-            - **x86_64** (Emulators/Laptops): `req_res_flutter-${{ steps.version.outputs.version }}-x86_64.apk`
+            **Download the right APK for your device:**
+            - 📱 **Modern Phones (v8a)**: `ReqRes_v${{ steps.version.outputs.version }}_v8a_Modern_Phones.apk` *(Most likely what you need)*
+            - 📟 **Old Phones**: `ReqRes_v${{ steps.version.outputs.version }}_Old_Phones.apk`
+            - 💻 **Emulators**: `ReqRes_v${{ steps.version.outputs.version }}_Emulators.apk`
             
             ### Installation
-            Download the APK corresponding to your device architecture and install it. If you're not sure, try the **ARM64 v8a** version first.
+            If you're not sure, try the **Modern Phones** version first.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
