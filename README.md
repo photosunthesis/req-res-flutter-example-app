@@ -10,35 +10,48 @@ A modern Flutter application showcasing authentication flows, profile creation, 
 - **Account Management**: User profile overview with persistent local storage and sign-out logic.
 - **Premium UI**: Sleek, responsive design using custom components, gradients, and optimized scrolling.
 
+## ⚠️ Demo Limitations
+
+This app uses the [ReqRes API](https://reqres.in) which has limited endpoints. The following workarounds are in place:
+
+| Area | Workaround |
+| ------ | ------------ |
+| **Login/Register** | Credentials are overridden with `eve.holt@reqres.in` / `pistol` since ReqRes only accepts predefined accounts. |
+| **Profile Data** | Stored locally via `SharedPreferences` as ReqRes has no profile endpoints. `initiateProfile()` pre-populates default data. |
+| **Home Feed** | Static hardcoded content—ReqRes doesn't provide news/feed endpoints. |
+| **Forgot Password** | Shows an "Account Locked" dialog as a placeholder. |
+| **Terms & Conditions** | Tapping opens a consent dialog instead of navigating to actual terms. |
+| **Social Login** | Google/Facebook buttons are present but non-functional (no OAuth configured). |
+
 ## 🏗️ Architecture
 
 The application follows **Clean Architecture** principles with clear separation of concerns:
 
 ```text
 lib/
-├── app/                      # App-level configuration
-│   ├── app.dart             # Root app widget
-│   ├── router.dart          # GoRouter navigation config
-│   └── theme.dart           # App theme & colors
-├── core/                     # Core functionality
-│   ├── api_client_provider.dart        # Dio HTTP client
-│   ├── shared_preferences_provider.dart # Local storage
-│   ├── is_signed_in_provider.dart      # Auth state
-│   └── image_picker_provider.dart      # Image selection
-├── data/                     # Data layer
-│   ├── models/              # Data models
-│   └── repositories/        # Data access layer
-│       ├── auth_repository.dart      # Authentication logic
-│       └── profile_repository.dart   # Profile management
-├── features/                 # Feature modules
-│   ├── login/               # Login feature
-│   ├── register/            # Registration flow
-│   ├── create_profile/      # Profile creation wizard
-│   ├── home/                # Home feed
-│   └── account/             # Account management
-├── ui_components/           # Reusable UI widgets
-├── constants/               # App constants (icons, images)
-└── l10n/                    # Internationalization (i18n)
+├── app/
+│   ├── app.dart
+│   ├── router.dart
+│   └── theme.dart
+├── core/
+│   ├── api_client_provider.dart
+│   ├── shared_preferences_provider.dart
+│   ├── is_signed_in_provider.dart
+│   └── image_picker_provider.dart
+├── data/
+│   ├── models/
+│   └── repositories/
+│       ├── auth_repository.dart
+│       └── profile_repository.dart
+├── features/
+│   ├── login/
+│   ├── register/
+│   ├── create_profile/
+│   ├── home/
+│   └── account/
+├── ui_components/
+├── constants/
+└── l10n/
 ```
 
 ### Key Architectural Patterns
@@ -64,139 +77,18 @@ lib/
 - **Custom Components**: Reusable text fields, buttons, and dialogs
 - **Theme System**: Centralized color palette and text styles
 
-## ⚙️ Setup & Running
+## ⚙️ Getting Started
 
-### Prerequisites
+1. **Install dependencies**: `flutter pub get`
+2. **Run the app**: `flutter run --dart-define=X_API_KEY=your_key`
+3. **Run tests**: `flutter test --test-randomize-ordering-seed random`
 
-- Flutter installed
-- Xcode (for iOS) or Android Studio (for Android)
+## � CI/CD
 
-### Installation
+Automated workflows (GitHub Actions):
 
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd req_res_flutter
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   flutter pub get
-   ```
-
-3. **Run the app**
-
-   ```bash
-   # Development mode (with API key)
-   flutter run --dart-define=X_API_KEY=your_api_key_here
-   
-   # Or use a relase build
-   flutter run --release --dart-define=X_API_KEY=your_api_key_here
-   ```
-
-### Running Tests
-
-```bash
-# Run all tests
-flutter test
-
-# Run tests in random order (recommended for CI)
-flutter test --test-randomize-ordering-seed random
-```
-
-## 🔧 Configuration Notes
-
-### Environment Variables
-
-The app uses `--dart-define` for configuration:
-
-- **X_API_KEY**: Required for API authentication (passed at build/run time)
-
-### API Integration
-
-The app integrates with the [ReqRes API](https://reqres.in) for demonstration purposes.
-
-## 📋 Important Implementation Notes
-
-Due to specific requirements and time constraints, certain architectural decisions were made intentionally:
-
-### 1. **Hardcoded Registration Credentials**
-
-**Location**: `lib/data/repositories/auth_repository.dart`
-
-The ReqRes API only allows registration with specific predefined accounts. To ensure the registration flow works consistently, user login and registration overrides user input with a known valid account:
-
-```dart
-email = 'eve.holt@reqres.in';
-password = 'pistol';
-```
-
-**Rationale**: This ensures the demo app can complete the full registration flow without API errors. In a production app, this would use actual user credentials.
-
-### 2. **Fake Profile Data in Repository**
-
-**Location**: `lib/data/repositories/profile_repository.dart`
-
-The `ProfileRepository` uses `SharedPreferences` as a mock backend rather than making actual API calls. The `initiateProfile()` method pre-populates hardcoded profile data:
-
-```dart
-await Future.wait([
-  _prefs.setString('first_name', 'Eve'),
-  _prefs.setString('last_name', 'Holt'),
-  _prefs.setString('username', 'eve.holt'),
-]);
-```
-
-**Rationale**: The ReqRes API doesn't provide endpoints for profile management. Using local storage simulates a backend while demonstrating the app's profile creation flow and state management.
-
-### 3. **Dialog Behavior on Login Screen**
-
-**Location**: `lib/features/login/login_screen.dart`
-
-Two dialogs are triggered by actions that would normally perform different operations:
-
-- **Forgot Password** → Shows "Account Locked" dialog
-- **Terms & Conditions tap** → Shows consent dialog
-
-**Rationale**: These demonstrate the dialog system and UI patterns without implementing full password recovery or terms viewing infrastructure, which was outside the scope given time constraints.
-
-### 4. **Static Home Feed Content**
-
-**Location**: `lib/features/home/home_screen.dart`
-
-The news feed displays static hardcoded content rather than fetching from an API.
-
-**Rationale**: The ReqRes API doesn't provide news/feed endpoints. The static content demonstrates the UI architecture, scrolling behavior, and card layouts.
-
-### 5. **No Actual Social Login**
-
-**Location**: `lib/features/login/login_screen.dart`
-
-Google and Facebook login buttons are present but have empty `onPressed` handlers.
-
-**Rationale**: Implementing OAuth flows requires additional setup (Firebase, Facebook App, etc.) that was beyond the scope of this demonstration app.
-
-## 🚀 CI/CD
-
-The project includes GitHub Actions workflows:
-
-### Test Workflow (`.github/workflows/test.yml`)
-
-- Runs on all pushes and pull requests
-- Executes tests in randomized order for reliability
-- Uses Flutter latest stable
-
-### Build & Release Workflow (`.github/workflows/build-release.yml`)
-
-- Triggers on pushes to `main` branch
-- Builds release APKs for multiple architectures:
-  - ARM v7a (32-bit devices)
-  - ARM64 v8a (modern 64-bit devices)
-  - x86_64 (emulators)
-- Creates GitHub releases with automatic versioning
-- Includes code obfuscation and split debug info for security
+- **Testing**: Runs on all PRs and pushes to ensure code quality.
+- **Release**: On pushes to `main`, builds obfuscated APKs (ARMv7, ARM64, x86_64) and creates GitHub releases.
 
 ## 🧪 Testing
 
