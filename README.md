@@ -126,7 +126,7 @@ Due to specific requirements and time constraints, certain architectural decisio
 
 **Location**: `lib/data/repositories/auth_repository.dart`
 
-The ReqRes API only allows registration with specific predefined accounts. To ensure the registration flow works consistently, the `registerAndSignIn` method overrides user input with a known valid account:
+The ReqRes API only allows registration with specific predefined accounts. To ensure the registration flow works consistently, user login and registration overrides user input with a known valid account:
 
 ```dart
 email = 'eve.holt@reqres.in';
