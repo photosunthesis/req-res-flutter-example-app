@@ -72,33 +72,40 @@ class _HomeLayoutState extends State<HomeLayout> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(
-                  index: 0,
-                  icon: AppIcons.home,
-                  label: l10n.tabHome,
-                  isSelected: selectedIndex == 0,
+                Expanded(
+                  child: _buildNavItem(
+                    index: 0,
+                    icon: AppIcons.home,
+                    label: l10n.tabHome,
+                    isSelected: selectedIndex == 0,
+                  ),
                 ),
-                _buildNavItem(
-                  index: 1,
-                  icon: AppIcons.videos,
-                  label: l10n.tabVideos,
-                  isSelected: selectedIndex == 1,
+                Expanded(
+                  child: _buildNavItem(
+                    index: 1,
+                    icon: AppIcons.videos,
+                    label: l10n.tabVideos,
+                    isSelected: selectedIndex == 1,
+                  ),
                 ),
                 _buildCenterButton(),
-                _buildNavItem(
-                  index: 3,
-                  icon: AppIcons.message,
-                  label: l10n.tabMessage,
-                  isSelected: selectedIndex == 3,
-                  hasBadge: true,
+                Expanded(
+                  child: _buildNavItem(
+                    index: 3,
+                    icon: AppIcons.message,
+                    label: l10n.tabMessage,
+                    isSelected: selectedIndex == 3,
+                    hasBadge: true,
+                  ),
                 ),
-                _buildNavItem(
-                  index: 4,
-                  icon: AppIcons.account,
-                  label: l10n.tabAccount,
-                  isSelected: selectedIndex == 4,
+                Expanded(
+                  child: _buildNavItem(
+                    index: 4,
+                    icon: AppIcons.account,
+                    label: l10n.tabAccount,
+                    isSelected: selectedIndex == 4,
+                  ),
                 ),
               ],
             ),
@@ -166,17 +173,26 @@ class _HomeLayoutState extends State<HomeLayout> {
   }
 
   Widget _buildCenterButton() {
-    return InkWell(
-      onTap: () => _onItemTapped(2),
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: 48,
-        height: 48,
-        decoration: BoxDecoration(
-          color: AppColors.primaryDark,
-          borderRadius: BorderRadius.circular(16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: InkWell(
+        onTap: () => _onItemTapped(2),
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: AppColors.primaryDark,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 28),
+            ),
+          ],
         ),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
     );
   }
