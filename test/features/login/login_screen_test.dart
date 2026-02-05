@@ -90,7 +90,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField).at(0), 'eve.holt@reqres.in');
-    await tester.enterText(find.byType(TextField).at(1), 'cityslicka');
+    await tester.enterText(find.byType(TextField).at(1), 'pistol');
 
     await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
     await tester.pump();
@@ -102,7 +102,7 @@ void main() {
     verify(
       () => mockDio.post(
         '/login',
-        data: {'email': 'eve.holt@reqres.in', 'password': 'cityslicka'},
+        data: {'email': 'eve.holt@reqres.in', 'password': 'pistol'},
       ),
     ).called(1);
   });
