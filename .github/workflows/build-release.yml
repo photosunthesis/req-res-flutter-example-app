@@ -1,0 +1,82 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.4'
+          cache: true
+      
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Run tests
+        run: flutter test --test-randomize-ordering-seed random
+      
+      - name: Build APK
+        run: |
+          flutter build apk --release \
+            --obfuscate --split-debug-info=build/app/outputs/symbols \
+            --split-per-abi \
+            --dart-define=X_API_KEY=${{ secrets.X_API_KEY }}
+      
+      - name: Get version from commit
+        id: version
+        run: |
+          VERSION="1.0.0+${{ github.run_number }}"
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=build-${{ github.run_number }}-$SHORT_SHA" >> $GITHUB_OUTPUT
+      
+      - name: Rename build artifacts
+        run: |
+          mkdir -p release
+          
+          for apk in build/app/outputs/flutter-apk/app-*-release.apk; do
+            filename=$(basename "$apk")
+            if [[ "$filename" == "app-armeabi-v7a-release.apk" ]]; then
+              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-arm-v7a.apk"
+            elif [[ "$filename" == "app-arm64-v8a-release.apk" ]]; then
+              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-arm64-v8a.apk"
+            elif [[ "$filename" == "app-x86_64-release.apk" ]]; then
+              cp "$apk" "release/req_res_flutter-${{ steps.version.outputs.version }}-x86_64.apk"
+            fi
+          done
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            release/*.apk
+          body: |
+            ## Release ${{ steps.version.outputs.version }}
+            
+            ### What's Changed
+            See the full changelog below.
+            
+            **Direct APKs** (Pick the one for your device):
+            - **ARM v7a** (Older 32-bit devices): `req_res_flutter-${{ steps.version.outputs.version }}-arm-v7a.apk`
+            - **ARM64 v8a** (Most modern 64-bit devices): `req_res_flutter-${{ steps.version.outputs.version }}-arm64-v8a.apk`
+            - **x86_64** (Emulators/Laptops): `req_res_flutter-${{ steps.version.outputs.version }}-x86_64.apk`
+            
+            ### Installation
+            Download the APK corresponding to your device architecture and install it. If you're not sure, try the **ARM64 v8a** version first.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
